@@ -135,7 +135,18 @@ public class ApplicationTest {
     sb.append("\n");
     sb.append(fileD2);
     sb.append("\n");
-    assertEquals(sb.toString(), output);
+    
+    Pattern p = Pattern.compile(File.separator);
+    Matcher m = p.matcher(output);
+    String outputWithUnixSeparator = m.replaceAll("/");
+    
+    String reference = sb.toString();
+    boolean applicationReturnsValidPlatformSpecificFilePaths = (reference.equals(output));
+    boolean applicationReturnsValidUnixFilePaths = (reference.equals(outputWithUnixSeparator));
+    boolean applicationReturnsValidFilePaths = (applicationReturnsValidPlatformSpecificFilePaths || applicationReturnsValidUnixFilePaths);
+    
+    assertTrue(applicationReturnsValidFilePaths);
+
   }
   
 
