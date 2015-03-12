@@ -50,7 +50,7 @@ public abstract class FileTransformer implements IFileVisitor {
     }
     try {
       Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
-      Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // bug fix by teacher
+      Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
       /*
