@@ -46,6 +46,7 @@ public class DFSFileExplorerTest {
     explorer.explore(new File("./fs-test"), new IFileVisitor() {
       @Override
       public void visit(File file) {
+          System.out.println("File name : " + file.getName());
         directories.add(file.getName());
       }
     });

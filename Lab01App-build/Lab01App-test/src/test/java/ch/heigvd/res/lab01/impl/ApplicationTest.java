@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +50,7 @@ public class ApplicationTest {
   public void theApplicationShouldGenerateTheCorrectNumberOfQuoteFiles() {
     String[] extensions = {"utf8"};
     Collection<File> files = FileUtils.listFiles(new File(Application.WORKSPACE_DIRECTORY), extensions, true);
+      System.out.println("files size : " + files.size() + "/" + NUMBER_OF_QUOTES);
     assertEquals(NUMBER_OF_QUOTES, files.size());
   }
   

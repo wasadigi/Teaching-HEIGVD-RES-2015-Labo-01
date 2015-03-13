@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl.filters;
 
+import ch.heigvd.res.lab01.impl.Utils;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -18,24 +19,57 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-
+  private int count = 1;
+  private boolean endLine = false;
+  private String[] line;
+  
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String tmp = "";
+    
+    if(line != null && line[1].equals("")) {
+        endLine = false;
+    } else {
+        endLine = true;
+    }
+    
+    line = Utils.getNextLine(str.substring(off, off + len));
+    
+    while(!line[0].equals("")) {
+        tmp += count + "\t" + line[0];
+        count++;
+        line = Utils.getNextLine(line[1]);
+    }
+    
+    if(line[1] != null) {
+        if(endLine) {
+            tmp += count + "\t" + line[1];
+            count++;
+        } else {
+            tmp += line[1];
+        }
+    }
+      System.out.println("Result");
+      System.out.println(tmp);
+    out.write(tmp, 0, tmp.length());
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(new String(cbuf), off, len);
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      out.write(count + "\t" + c);
+      count++;
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
 
 }

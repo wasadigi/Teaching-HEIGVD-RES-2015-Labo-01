@@ -55,6 +55,8 @@ public class FileNumberingFilterWriterTest {
     writer.write(line1_1);
     writer.write(line1_2);
     writer.write(line2);  
+      System.out.println("itShouldWorkWithPartialLines");
+      System.out.println(stringWriter.toString());
     Assert.assertEquals("1\t" + line1_1 + line1_2 + "2\t" + line2, stringWriter.toString());
   }
 
