@@ -18,58 +18,67 @@ import java.util.logging.Logger;
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-  private int count = 1;
-  private boolean endLine = false;
-  private String[] line;
-  
-  public FileNumberingFilterWriter(Writer out) {
-    super(out);
-  }
+    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private int count = 0;
+    private boolean start = true; // Is the first line
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    String tmp = "";
-    
-    if(line != null && line[1].equals("")) {
-        endLine = false;
-    } else {
-        endLine = true;
+    public FileNumberingFilterWriter(Writer out) {
+        super(out);
     }
-    
-    line = Utils.getNextLine(str.substring(off, off + len));
-    
-    while(!line[0].equals("")) {
-        tmp += count + "\t" + line[0];
-        count++;
-        line = Utils.getNextLine(line[1]);
-    }
-    
-    if(line[1] != null) {
-        if(endLine) {
-            tmp += count + "\t" + line[1];
-            count++;
-        } else {
-            tmp += line[1];
+
+    @Override
+    public void write(String str, int off, int len) throws IOException {
+        if (start) {
+            writeLineNumber();
+            start = false;
         }
+        String line[] = Utils.getNextLine(str.substring(off, off + len));
+        // One line
+        if (line[0].isEmpty()) {
+            out.write(line[1], 0, line[1].length());
+            return;
+        }
+        // loop to line[0] is empty => there is a line
+        while (!line[0].isEmpty()) {
+            out.write(line[0], 0, line[0].length());
+            writeLineNumber();
+            line = Utils.getNextLine(line[1]);
+        }
+        
+        // Write the last line
+        if (!line[1].isEmpty()) {
+            out.write(line[1], 0, line[1].length());
+        }
+        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     }
-      System.out.println("Result");
-      System.out.println(tmp);
-    out.write(tmp, 0, tmp.length());
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
 
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    write(new String(cbuf), off, len);
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        write(new String(cbuf), off, len);
+        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    }
 
-  @Override
-  public void write(int c) throws IOException {
-      out.write(count + "\t" + c);
-      count++;
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    private boolean isNewLine = false;
+
+    @Override
+    public void write(int c) throws IOException {
+        if (start) {
+            writeLineNumber();
+            start = false;
+        }
+        if (c == '\n' || c == '\r') {
+            isNewLine = true;
+        } else if (isNewLine) {
+            writeLineNumber();
+            isNewLine = false;
+        }
+        out.write(c);
+        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    }
+
+    private void writeLineNumber() throws IOException {
+        String s = ++count + "\t";
+        out.write(s, 0, s.length());
+    }
 
 }

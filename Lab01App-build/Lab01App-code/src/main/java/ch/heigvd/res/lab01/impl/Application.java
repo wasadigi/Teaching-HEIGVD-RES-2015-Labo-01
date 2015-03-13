@@ -157,7 +157,7 @@ public class Application implements IApplication {
               * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
               */
               String path = file.getParent() + "\\" + file.getName();
-              path = path.replace("\\", "/"); // Revert \ (Windows)
+             // path = path.replace("\\", "/"); // Revert \ (Windows)
               writer.write(path + "\n");
           } catch (IOException ex) {
               Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
@@ -168,7 +168,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    return "info@heig-vd.ch";
+    return "michael.berthouzoz@heig-vd.ch";
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
 
