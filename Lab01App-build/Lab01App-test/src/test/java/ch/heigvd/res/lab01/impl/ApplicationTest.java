@@ -143,6 +143,7 @@ public class ApplicationTest {
     if (fileSeparator.equals("\\")) {
       fileSeparator = "\\\\";
     }
+    
     Pattern p = Pattern.compile(fileSeparator);
     Matcher m = p.matcher(output);
     String outputWithUnixSeparator = m.replaceAll("/");
