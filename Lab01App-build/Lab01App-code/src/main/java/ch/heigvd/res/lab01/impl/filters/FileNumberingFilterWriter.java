@@ -30,43 +30,33 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    String s = str.substring(off, off + len);
-    String myString = "";
+    String nextLine[] = Utils.getNextLine(str.substring(off, off+len));
+    String strF = "";
 
-    if (firstLine) {
-      lineNumber = 1;
-      myString += lineNumber + "\t";
-      firstLine = false;
+    if (lineNumber == 0)
+      strF += (++lineNumber) + "\t";
+
+    while (!nextLine[0].isEmpty()) {
+      strF += nextLine[0] + (++lineNumber) + "\t";
+      nextLine = Utils.getNextLine(nextLine[1]);
     }
 
-    String[] next = {"",""};
-    do {
-      next = Utils.getNextLine(s);
-      if (next[0].isEmpty())
-        break;
-      lineNumber++;
-      myString += next[0] + lineNumber + "\t";
-      s = next[1];
-    } while (true);
-
-    myString += next[1];
-    super.write(myString, 0, myString.length());
+    strF += nextLine[1];
+    super.write(strF, 0, strF.length());
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    String s = new String(cbuf, off, len);
-    this.write(s, 0, s.length());
+    this.write(new String(cbuf), off, len);
   }
 
   @Override
   public void write(int c) throws IOException { 
 
-    if (firstLine) {
+    if (lineNumber == 0) {
       lineNumber = 1;
       super.write('1');
       super.write('\t');
-      firstLine = false;
     }
 
     switch (c) {
