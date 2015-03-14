@@ -137,7 +137,11 @@ public class ApplicationTest {
     sb.append("\n");
     
     // Bug fix in the original unit test by teacher
-    Pattern p = Pattern.compile(File.separator);
+    String fileSeparator = File.separator;
+    if (fileSeparator.equals("\\")) {
+      fileSeparator = "\\\\";
+    }
+    Pattern p = Pattern.compile(fileSeparator);
     Matcher m = p.matcher(output);
     String outputWithUnixSeparator = m.replaceAll("/");
     
